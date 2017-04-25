@@ -23,34 +23,38 @@
 
   export default {
     name: 'Week',
-    data () {
-      return {
-        rect: ''
-      }
-    },
     props: ['weeklyItems'],
-    methods: {},
+    methods: {
+        isElementInViewport(el) {
+            let rect = el.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            )
+        },
+        callbackFunc(listItems) {
+            for (var i = 0; i < listItems.length; i++) {
+                if (this.isElementInViewport(listItems[i])) {
+                    listItems[i].classList.add("in-view");
+                }
+            }
+        }
+    },
+//   mounted(){
+//       mounted 됐을 때 weeklyItems이 비어있음
+      // mounted 때는 통신이 이뤄진 결과값을 data에 넣어두지 못했음
+//       console.log('마운티드', this.weeklyItems);
+//      var listItems = document.querySelectorAll('.weeklyItems li');
+//      window.addEventListener('scroll', () => this.callbackFunc(listItems));
+//    },
     updated () {
+        // updated 됐을 때 weeklyItems를 가지고 오면서 데이터 변화가 일어나서
+        // updated 훅 실행되면서 아래 함수가 호출됌
+//      console.log('업데이트', this.weeklyItems);
       let listItems = document.querySelectorAll('.weeklyItems li');
-      window.addEventListener('scroll', () => callbackFunc(listItems));
-    }
-  }
-
-  function isElementInViewport(el) {
-    let rect = el.getBoundingClientRect();
-    return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-    )
-  }
-
-  function callbackFunc(listItems) {
-    for (var i = 0; i < listItems.length; i++) {
-      if (isElementInViewport(listItems[i])) {
-        listItems[i].classList.add("in-view");
-      }
+      window.addEventListener('scroll', () => this.callbackFunc(listItems));
     }
   }
 </script>
