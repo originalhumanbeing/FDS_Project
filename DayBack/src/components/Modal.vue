@@ -15,7 +15,7 @@
             class="close-button">x</a>
           <h2 class="title is-2">{{signin.title}}</h2>
           <!--input form으로 뺄 수 있는 부분-->
-            <form mothod="post" class="form-signin">
+            <form method="post" class="form-signin">
               <fieldset>
                 <input class="login" required type="text" name="email"
                 v-model="signin.email"
@@ -54,21 +54,21 @@
             @click="closeModal"
             class="close-button">x</a>
           <h2 class="title is-2">{{signup.title}}</h2>
-          <form mothod="post" class="form-signin">
+          <form method="post" class="form-signin">
             <fieldset>
-              <input class="login" type="textarea" name="username"
+              <input class="login" required type="text" name="username"
                 v-model="signup.nickname" maxlength="10"
                 id="username" placeholder="닉네임">
               <label for="login-id"></label>
-              <input class="login" type="text" name="email"
+              <input class="login" required type="email" name="email"
                 v-model="signup.email"
                 id="email" placeholder="이메일">
               <label for="login-id"></label>
-              <input class="login" type="password" name="password"
+              <input class="login" required type="password" name="password"
                v-model="signup.password"
                id="password" placeholder="비밀번호">
               <label for="login-id"></label>
-              <input class="login" type="password" name="password"
+              <input class="login" required type="password" name="password"
                v-model="signup.passwordCheck"
                id="passwordCheck" placeholder="비밀번호 재확인">
               <label for="login-id"></label>
@@ -118,8 +118,21 @@ export default {
       this.show = !this.show;
     },
     signUp: function(e) {
-      // 기본 이벤트(submit) 막음
-      e.preventDefault();
+        // 처음부터 기본이벤트 발생 모두 막으면 input 유효 검사도 막기 때문에 조건 확인 후 이벤트 발생 막음
+      if(this.signup.nickname !== '' && this.signin.email !== '' && this.signin.password !== '' && this.signin.passwordCheck !== '') {
+          // password 형식, 이메일 형식도 체크하는 부분을 만들면 좋을듯
+          // (저 조건 형식을 다 따로 나눠서 이메일이 있을 때, 이메일 형식 체크를 하고.. 이런 식으로 추가할 수도 있음)
+          if (this.signup.password === this.signup.passwordCheck) {
+              e.preventDefault(); // 기본이벤트 발생을 막고 가입하기로 넘김
+          }
+          else {
+              window.alert('입력한 비밀번호가 틀렸습니다');
+              return; }
+      }
+      else {
+          return;
+      }
+
       var _this = this;
       axios.post('https://dayback.hcatpr.com/signup/', {
       // axios.post('http://localhost:3000/users', {
@@ -133,17 +146,33 @@ export default {
         console.log(response)
         console.log("성공")
         window.alert('가입에 성공했습니다. 이제 로그인 해보세요! :-)');
+        _this.signup.nickname = '';
+        _this.signup.email = '';
+        _this.signup.password = '';
+        _this.signup.passwordCheck = '';
         // 가입하면 다시 로그인 페이지로 돌아가기
         _this.flipModal();
       })
       .catch((error) => {
-        window.alert('가입한 내용을 다시 한 번 확인해 주세요.');
-        console.log(error)
+          // 중복된 이메일 있을 경우 에러 띄우기
+//        console.log(error.response);
+        if ( error.response.data.email[0] === '이 칸은 반드시 고유해야 합니다.' )
+        {
+            window.alert('이미 가입한 이메일입니다');
+            _this.signup.email = '';
+        }
+        else {
+            window.alert('가입한 내용을 다시 한 번 확인해 주세요.');
+        }
       })
     },
     logIn: function(e) {
-      e.preventDefault();
-      // this.$router.push('/service');
+      if(this.signin.email !== '' && this.signin.password !== '') {
+          e.preventDefault();
+      }
+      else {
+          return;
+      }
       axios.post('https://dayback.hcatpr.com/login/', {
         // results: {
           email: this.signin.email,
@@ -181,6 +210,7 @@ export default {
         window.alert('이메일 주소나 비밀번호에 문제가 있어요!');
       })
     },
+      // firebase 구글로그인 이벤트 부분
     googleLogin() {
       firebaseService.googleLogin().then(user => {
           this.$store.userInfo = user;

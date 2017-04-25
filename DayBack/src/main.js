@@ -5,22 +5,25 @@ import VueRouter from 'vue-router'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'
 import Main from './components/Main.vue'
-import Django from './components/DjangoTest.vue'
 
+// vue-material 사용을 위한 설정
 Vue.use(VueMaterial);
 // vue-router 사용을 위한 설정
 Vue.use(VueRouter);
 
-// eventBus 사용을 위한 설정
+// eventBus 사용을 위한 설정 (vue 객체)
 const eventBus = new Vue();
-// Vue.prototype에 store 객체 연결
+
+// 일반 객체 설정 (전역에서 데이터 공유하기 위해서)
 const store = {
     state: {
-        key: '2d0f5d21524b196f4045a4736fd8c39740967471',
+        key: '',
+        // firebase 구글 로그인
         userInfo: null
     }
 };
 
+// vue 객체에 이벤트 버스와 데이터 저장하는 변수를 프로토타입으로 설정
 Object.defineProperties(Vue.prototype, {
     $eventBus: {
         get() {
@@ -43,13 +46,7 @@ const routes = [{
     {
         path: '/service',
         component: Main,
-    },
-    {
-        path: '/d',
-        component: Django
-    }
-
-];
+    }];
 
 // 라우터 객체 생성하고 정의해 놓은 라우트 설정
 const router = new VueRouter({

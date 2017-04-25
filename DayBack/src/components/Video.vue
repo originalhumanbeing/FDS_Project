@@ -2,6 +2,7 @@
   <div class="homepage-hero-module">
     <div class="video-container">
       <video autoplay loop class="fillWidth">
+        // 크로스 브라우징 이슈때문에 파일 형식을 2개 넣어둠
         <source :src="videoSrcMP4" type="video/mp4" />Your browser does not support the video tag. I suggest you upgrade your browser.
         <source :src="videoSrcWebm" type="video/webm" />Your browser does not support the video tag. I suggest you upgrade your browser.
       </video>

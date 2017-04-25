@@ -24,7 +24,6 @@
             </div>
           </md-input-container>
         </form>
-
         <md-card-actions>
           <md-button @click.native="createEmoji">Post</md-button>
         </md-card-actions>
@@ -51,7 +50,7 @@
     },
       // 수정시 입력 카드로 돌아갈 때 그 인풋창에 입력값 자체가 계속 넣어져 있는 것
     mounted () {
-        console.log('input card : ', this.todayItem);
+//        console.log('input card : ', this.todayItem);
         if (this.todayItem && this.todayItem.content){
             this.user_input.content = this.todayItem.content;
         }
@@ -62,19 +61,27 @@
     methods: {
       selectEmoji(emoji) {
         this.user_input.mood = emoji;
-        console.log(emoji);
+//        console.log(emoji);
       },
       createEmoji() {
+        // 오늘 이모지를 선택 안 할 경우
+        if (!this.user_input.mood){
+            window.alert('이모티콘을 선택해 주세요!');
+            return;
+        }
           // 입력된 값이 없을 때 기본값 넣는 것 처리 필요
+          // authorID가 기본값에서 고유의 값으로 안 바뀌어 있을 것에 대비해서 우선 초기값 설정하고 시작
+          // 통신할 때 기본으로 필요한 값이어서 받아옴
         this.user_input.author = this.authorID;
 
         if (this.isUpdate) {
+            // isUpdate가 true면 수정이므로 put
             axios.put('https://dayback.hcatpr.com/post/'+this.todayItem.id+'/', this.user_input, {
                 headers: {
                     'Authorization': 'Token ' + this.$store.state.key
                 }
             }).then(response=>{
-                console.log(response);
+//                console.log(response);
                 this.$eventBus.$emit('changeComplete');
                 window.alert('오늘의 감정이 수정되었습니다.')
             }).catch(e=>{
@@ -82,6 +89,8 @@
             })
         }
         else {
+            // api에서 post이라고 해도 body를 null로 받는다고 설계해뒀으면 this.user_input 부분을 ''이나 null로 채워줘야함
+            // 아니면 비우고 지나가면 config 부분을 data 부분으로 착각해서 오류남
             axios.post('https://dayback.hcatpr.com/post/', this.user_input, {
                 headers: {
                     'Authorization': 'Token ' + this.$store.state.key
