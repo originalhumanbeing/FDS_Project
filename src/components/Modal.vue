@@ -288,7 +288,7 @@ fieldset
 
 .form-signin
   line-height: 30px
-  font-size: 17px
+  font-size: 1.2em
   width: 260px
   @extend %flex-col-center
   .login
