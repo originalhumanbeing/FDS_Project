@@ -26,10 +26,6 @@ export default {
                 'Authorizati on': 'Token ' + uid
             }
         });
-
-
-
-
     },
 
     updateEmoji({uid, comment = '', emoji, date}) {
