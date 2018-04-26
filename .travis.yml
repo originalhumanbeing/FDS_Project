@@ -6,7 +6,7 @@ script:
   - npm run build
   - pip install --user awscli
   - aws s3 cp index.html s3://hhj-dayback/
-  - aws s3 cp dist/* s3://hhj-dayback/dist/ --recursive
+  - aws s3 cp dist/* s3://hhj-dayback/ --recursive
 
 cache:
   bundler: true
