@@ -288,7 +288,7 @@ fieldset
 
 .form-signin
   line-height: 30px
-  font-size: 1.2em
+  font-size: 17px
   width: 260px
   @extend %flex-col-center
   .login
@@ -296,7 +296,7 @@ fieldset
     border-bottom: 5px solid #dcdcdc
     padding: 5px 0
     margin: 0 auto 2px auto
-    font-size: 25px
+    font-size: 1.2em
     text-indent: 10px
   .submit-button, .signup-button
     width: 260px
